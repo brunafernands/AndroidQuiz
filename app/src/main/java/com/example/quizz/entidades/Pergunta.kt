@@ -1,6 +1,6 @@
 package com.example.quizz.entidades
 
-class Perguntas (
+class Pergunta (
     var category: String,
     var type: String,
     var difficulty: String,

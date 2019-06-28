@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         btLogar.setOnClickListener {
             carregaDados()
+            val intent = Intent(this@MainActivity, ConfigActivity::class.java)
+            startActivity(intent)
         }
 
         btCadastrar.setOnClickListener {
@@ -52,10 +54,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Login>, response: Response<Login>) {
                 val login = response.body()!!
                 if (login.sucesso) {
-                    btLogar.text=login.mensagem
-                    Toast.makeText(this@MainActivity, login.mensagem, Toast.LENGTH_SHORT).show()
-//                    val intent = Intent(this@MainActivity, ConfiguracaoActivity::class.java)
-//                    startActivity(intent)
+                     Toast.makeText(this@MainActivity, login.mensagem, Toast.LENGTH_SHORT).show()
                 } else {
                     btLogar.text=login.mensagem
                     Toast.makeText(this@MainActivity, login.mensagem, Toast.LENGTH_SHORT).show()

@@ -1,5 +1,6 @@
 package com.example.quizz
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -10,6 +11,7 @@ import com.example.quizz.entidades.CategoriaMaior
 import com.example.quizz.services.CategoriaService
 import com.example.quizz.ui.CategoriaAdapter
 import kotlinx.android.synthetic.main.activity_config.*
+import kotlinx.android.synthetic.main.layout_categoria.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +26,15 @@ class ConfigActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_config)
+
+        setRetrofit()
+        carregaDados()
+
+        btCategoria.setOnClickListener {
+            carregaDados()
+            val intent = Intent(this@ConfigActivity, PerguntaActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     fun setRetrofit() {
@@ -44,10 +55,12 @@ class ConfigActivity : AppCompatActivity() {
                 response: Response<CategoriaMaior>
             ) {
                 val results = response.body()
-                if (results != null)
-                    configuraRecyclerView(results?.categoriaMaior)
+                if (results != null) {
+                    configuraRecyclerView(results.trivia_categories)
+                }
             }
         })
+
     }
 
     fun configuraRecyclerView(results: List<Categoria>) {
