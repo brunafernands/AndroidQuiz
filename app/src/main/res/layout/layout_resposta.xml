@@ -7,16 +7,17 @@
 
     <Button
             android:text="Button"
-            android:layout_width="245dp"
-            android:layout_height="70dp" android:id="@+id/btResposta"
+            android:layout_width="251dp"
+            android:layout_height="63dp" android:id="@+id/btResposta"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="204dp"
-            app:layout_constraintTop_toTopOf="@+id/pergunta"/>
+            app:layout_constraintTop_toTopOf="@+id/pergunta" android:textSize="18sp"
+            android:textColor="@color/design_default_color_on_secondary"/>
     <TextView
             android:text="TextView"
-            android:layout_width="324dp"
-            android:layout_height="163dp"
+            android:layout_width="331dp"
+            android:layout_height="126dp"
             android:id="@+id/pergunta" android:layout_marginTop="112dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

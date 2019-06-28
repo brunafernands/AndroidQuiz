@@ -1,12 +1,12 @@
 package com.example.quizz.ui
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quizz.R
 import com.example.quizz.entidades.Jogador
 import com.example.quizz.entidades.Pergunta
 import com.example.quizz.services.LoginService
@@ -16,6 +16,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import android.graphics.Color
+import androidx.core.content.ContextCompat.startActivity
+import com.example.quizz.PerguntaActivity
+import com.example.quizz.R
+
 
 class PerguntasAdapter(private val pergunta: Pergunta) :
     RecyclerView.Adapter<PerguntasAdapter.ResultViewHolder>() {
@@ -53,12 +58,14 @@ class PerguntasAdapter(private val pergunta: Pergunta) :
 
             itemView.btResposta.setOnClickListener {
                 if(itemView.btResposta.text == pergunta.correct_answer){
-
+                    itemView.btResposta.setBackgroundColor(Color.GREEN)
                     enviarDados()
-
+                    proximaPergunta(itemView.context)
                 }else{
+                    itemView.btResposta.setBackgroundColor(Color.RED)
                     enviarDados()
                     configureRetrofit()
+                    proximaPergunta(itemView.context)
                 }
             }
         }
@@ -90,6 +97,11 @@ class PerguntasAdapter(private val pergunta: Pergunta) :
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             service = retrofit.create<LoginService>(LoginService::class.java)
+    }
+
+    private fun proximaPergunta(c: Context){
+        val intent = Intent(c, PerguntaActivity::class.java)
+        c.startActivity(intent)
     }
 
 }

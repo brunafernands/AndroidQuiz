@@ -12,29 +12,40 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import android.R.id.edit
+import android.content.Context
+import android.content.SharedPreferences
+
+
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var service: LoginService
+    lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        configureRetrofit()
+        if (isUsuarioLogado())
+            iniciarJogo()
+        else {
+            configureRetrofit()
 
-        btLogar.setOnClickListener {
-            carregaDados()
-            val intent = Intent(this@MainActivity, ConfigActivity::class.java)
-            startActivity(intent)
+            btLogar.setOnClickListener {
+                carregaDados()
+                val intent = Intent(this@MainActivity, ConfigActivity::class.java)
+                startActivity(intent)
+            }
+
+            btCadastrar.setOnClickListener {
+                val intent = Intent(this@MainActivity, RegistroActivity::class.java)
+                startActivity(intent)
+
+            }
         }
 
-        btCadastrar.setOnClickListener {
-            val intent = Intent(this@MainActivity, RegistroActivity::class.java)
-            startActivity(intent)
-
-        }
-
+        prefs = getSharedPreferences("activityprefs", Context.MODE_PRIVATE)
     }
 
     private fun configureRetrofit() {
@@ -45,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         service = retrofit.create<LoginService>(LoginService::class.java)
     }
 
-
     private fun carregaDados() {
         service.logar(txtEmail.text.toString(), txtSenha.text.toString()).enqueue(object : Callback<Login> {
             override fun onFailure(call: Call<Login>, t: Throwable) {
@@ -54,9 +64,11 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Login>, response: Response<Login>) {
                 val login = response.body()!!
                 if (login.sucesso) {
-                     Toast.makeText(this@MainActivity, login.mensagem, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, login.mensagem, Toast.LENGTH_SHORT).show()
+                    salvaPreferencia()
+                    iniciarJogo()
                 } else {
-                    btLogar.text=login.mensagem
+                    btLogar.text = login.mensagem
                     Toast.makeText(this@MainActivity, login.mensagem, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -64,4 +76,29 @@ class MainActivity : AppCompatActivity() {
 
         })
     }
+
+    private fun iniciarJogo() {
+        Toast.makeText(this@MainActivity, "Entrando no Jogo", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this@MainActivity, PerguntaActivity::class.java)
+        startActivity(intent)
+    }
+
+
+
+    private fun salvaPreferencia(){
+        val editor = prefs.edit()
+        editor.putString("email", txtEmail.text.toString())
+        editor.putString("senha", txtSenha.text.toString())
+        editor.commit()
+
+
+
+    }
+
+    private fun isUsuarioLogado() = prefs.contains("email")
+//       //exemplo val string = prefs.getString("email","")
+//        prefs.contains("email")
+//        prefs.getString("email", txtEmail.text.toString())
+//        prefs.getString("senha", txtSenha.text.toString())
+//    }
 }
